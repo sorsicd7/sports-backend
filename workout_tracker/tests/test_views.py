@@ -86,4 +86,60 @@ class WorkoutListTestCase(APITestCase):
         self.assertEqual(response.data[0]['name'], 'Workout1')
         self.assertEqual(response.data[1]['name'], 'Workout2')
 
-  
+
+class WorkoutDetailTestCase(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpass',
+            email = "test@gmai.com",
+
+        )
+        self.trainer = User.objects.create_user(
+            username='traineruser',
+            password='trainerpass',
+            email = "test2@gmai.com",
+            is_trainer=True
+
+        )
+        self.workout = Workout.objects.create(
+            name='Test Workout',
+            description='Test Description',
+        )
+        self.url = reverse('workout-detail', args=[self.workout.id])
+
+    def test_get_workout(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'Test Workout')
+
+    def test_update_workout_not_trainer(self):
+        data = {
+            'name': 'Updated Workout',
+            'description': 'Updated Description',
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_workout_trainer(self):
+        data = {
+            'name': 'Updated Workout',
+            'description': 'Updated Description',
+        }
+        self.client.force_authenticate(user=self.trainer)
+        response = self.client.put(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'Updated Workout')
+
+    def test_delete_workout_not_trainer(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_workout_trainer(self):
+        self.client.force_authenticate(user=self.trainer)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Workout.objects.count(), 0)
