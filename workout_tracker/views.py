@@ -30,3 +30,8 @@ class ExerciseDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ExerciseSerializer
     permission_classes = [ IsTrainer  | ReadOnly]
 
+class WorkoutList(generics.ListAPIView):
+    queryset = Workout.objects.all()
+    serializer_class = WorkoutSerializer
+    permission_classes = [permissions.AllowAny]
+
