@@ -35,3 +35,13 @@ class WorkoutList(generics.ListAPIView):
     serializer_class = WorkoutSerializer
     permission_classes = [permissions.AllowAny]
 
+class WorkoutCreate(generics.CreateAPIView):
+    queryset = Workout.objects.all()
+    serializer_class = WorkoutSerializer
+    permission_classes = [IsTrainer]
+
+class WorkoutDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Workout.objects.all()
+    serializer_class = WorkoutSerializer
+    permission_classes = [IsTrainer | ReadOnly]
+
