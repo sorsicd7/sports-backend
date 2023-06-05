@@ -11,8 +11,8 @@ WORKDIR /code
 #RUN export CPLUS_INCLUDE_PATH=/usr/include/gdal
 #RUN export C_INCLUDE_PATH=/usr/include/gdal
 # Install dependencies
-COPY ./requirements/ .
-RUN pip install -r development.txt
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 # gdal for GeoDjango
 
 # Copy project
