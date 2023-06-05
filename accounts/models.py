@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from .manager import AccountManager
 from django.core.exceptions import ValidationError
-
+from workout_tracker.models import Workout, AccountWorkout
 
 def validate_phone_number(value):
     if not value.isdigit() or len(value) != 11 or not value.startswith('09'):
@@ -22,7 +22,7 @@ class Account(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_trainer = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
-
+    workouts = models.ManyToManyField(Workout, through=AccountWorkout, related_name='accounts')
     objects = AccountManager()
 
     USERNAME_FIELD = 'email'

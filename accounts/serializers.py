@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import Account
+from workout_tracker.serializers import WorkoutSerializer
 
 class AccountSerializer(serializers.ModelSerializer):
+    workouts = WorkoutSerializer(many=True, read_only=True)
     password = serializers.CharField(
         max_length=128,
         min_length=8,
@@ -12,7 +14,7 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ('id', 'email', 'username', 'first_name', 'last_name', 'password', 'is_trainer', 'is_student',\
-            'phone_number', 'description')
+            'phone_number', 'description', 'workouts')
         read_only_fields = ('id',)
 
     def create(self, validated_data):

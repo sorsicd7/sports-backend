@@ -1,9 +1,7 @@
 from django.test import TestCase
 from workout_tracker.models import Exercise, Workout
-from rest_framework import serializers
 from ..serializers import WorkoutSerializer, ExerciseSerializer
 from django.core.files.uploadedfile import SimpleUploadedFile
-import base64
 
 class ExerciseSerializerTest(TestCase):
     
