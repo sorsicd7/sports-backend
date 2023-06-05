@@ -143,3 +143,25 @@ class WorkoutDetailTestCase(APITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Workout.objects.count(), 0)
+
+class UserWorkoutsViewTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='test@test.com',
+            password='testpass',
+            username='testuser'
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        self.workout = Workout.objects.create(
+            name='Test Workout',
+            description='A test workout'
+        )
+        self.user.workouts.add(self.workout)
+
+    def test_user_workouts_view(self):
+        url = reverse('user-workouts')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Test Workout')
