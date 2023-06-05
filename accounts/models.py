@@ -10,13 +10,13 @@ def validate_phone_number(value):
         raise ValidationError('شماره تماس وارد شده نا معتبر است.')
         
 class Account(AbstractBaseUser):
-    email = models.EmailField(unique=True)
-    username = models.CharField(max_length=30, unique=True)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
+    email = models.EmailField(unique=True, verbose_name='ایمیل')
+    username = models.CharField(max_length=30, unique=True, verbose_name='نام کاربری')
+    first_name = models.CharField(max_length=30, blank=True,  verbose_name= 'نام')
+    last_name = models.CharField(max_length=30, blank=True, verbose_name= 'نام خانوادگی')
     phone_number = models.CharField(max_length=11, validators=[validate_phone_number]\
-    , unique=True, blank=True, null=True)   
-    description =  models.TextField(blank=True, null=True)
+    , unique=True, blank=True, null=True, verbose_name= '=شماره تماس')   
+    description =  models.TextField(blank=True, null=True,  verbose_name= 'توضیحات')
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
