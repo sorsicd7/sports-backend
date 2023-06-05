@@ -58,3 +58,31 @@ class WorkoutSerializerTest(TestCase):
         self.assertEqual(workout.name, 'full body workout')
         self.assertEqual(workout.description, 'A workout for the whole body')
         self.assertEqual(workout.exercises.count(),2)
+
+    def test_update(self):
+        input_data = {
+            'name': 'updated workout',
+            'description': 'An updated version of the workout',
+            'exercises': [
+                {
+                    'id': self.exercise1.id,
+                    'name': 'push-up',
+                    'description': 'A classic bodyweight exercise',
+                    'image': SimpleUploadedFile('test_image.jpg', b'content'),
+                    'video': SimpleUploadedFile('test_video.mp4', b'content'),
+                },
+                {
+                    'id': self.exercise2.id,
+                    'name': 'squat',
+                    'description': 'A fundamental lower body exercise',
+                    'image': SimpleUploadedFile('test_image.jpg', b'content'),
+                    'video': SimpleUploadedFile('test_video.mp4', b'content'),
+                }
+            ]
+        }
+        serializer = WorkoutSerializer(instance=self.workout, data=input_data)
+        self.assertTrue(serializer.is_valid())
+        updated_workout = serializer.save()
+        self.assertEqual(updated_workout.name, 'updated workout')
+        self.assertEqual(updated_workout.description, 'An updated version of the workout')
+        self.assertEqual(updated_workout.exercises.count(), 2)
