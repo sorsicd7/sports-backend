@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
     'drf_yasg',
+    'workout_tracker',
     "accounts.apps.AccountsConfig",
 
 ]
