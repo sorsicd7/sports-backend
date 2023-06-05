@@ -5,7 +5,8 @@ from workout_tracker.views import (
     ExerciseDetail,
     WorkoutList,
     WorkoutDetail,
-    WorkoutCreate
+    WorkoutCreate,
+    UserWorkoutsView
 )
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
     path('workouts/', WorkoutList.as_view(), name='workout-list'),
     path('workouts/create/', WorkoutCreate.as_view(), name='workout-create'),
     path('workouts/<int:pk>/', WorkoutDetail.as_view(), name='workout-detail'),
+    path('user-workouts/', UserWorkoutsView.as_view(), name='user-workouts'),
 ]
