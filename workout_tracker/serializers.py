@@ -24,3 +24,25 @@ class WorkoutSerializer(serializers.ModelSerializer):
                 exercise = Exercise.objects.create(**exercise_data)
                 workout.exercises.add(exercise)
         return workout
+
+    def update(self, instance, validated_data):
+        # Update the fields of the Workout instance
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        
+        # Update the Exercise instances related to this Workout
+        exercise_data = validated_data.pop('exercises', None)
+        if exercise_data is not None:
+            instance.exercises.clear()
+            for exercise in exercise_data:
+                if exercise.get('id'):
+                    item = Exercise.objects.get(pk=exercise['id'])
+                    item.name = exercise.get('name', item.name)
+                    item.description = exercise.get('description', item.description)
+                    item.save()
+                    instance.exercises.add(item)
+                else:
+                    item = Exercise.objects.create(**exercise)
+                    instance.exercises.add(item)
+        instance.save()
+        return instance
