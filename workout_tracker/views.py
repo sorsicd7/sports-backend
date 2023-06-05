@@ -45,3 +45,11 @@ class WorkoutDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = WorkoutSerializer
     permission_classes = [IsTrainer | ReadOnly]
 
+
+class UserWorkoutsView(generics.ListAPIView):
+    serializer_class = WorkoutSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.workouts.all()
