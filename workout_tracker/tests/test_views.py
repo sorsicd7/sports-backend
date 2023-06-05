@@ -1,7 +1,7 @@
-import email
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from rest_framework.test import APITestCase
 
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -53,3 +53,37 @@ class ExerciseTests(TestCase):
         response = self.client.delete(reverse('exercise-detail', args=[self.exercise.id]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Exercise.objects.count(), 0)
+
+
+class WorkoutListTestCase(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpass',
+            email = "test@gmai.com",
+
+        )
+        self.trainer = User.objects.create_user(
+            username='traineruser',
+            password='trainerpass',
+            email = "test2@gmai.com",
+            is_trainer=True
+        )
+        self.workout1 = Workout.objects.create(
+            name='Workout1',
+            description='Test Description',
+        )
+        self.workout2 = Workout.objects.create(
+            name='Workout2',
+            description='Test Description 2',
+        )
+        self.url = reverse('workout-list')
+
+    def test_get_workouts(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['name'], 'Workout1')
+        self.assertEqual(response.data[1]['name'], 'Workout2')
+
+  
