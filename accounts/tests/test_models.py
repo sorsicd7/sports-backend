@@ -17,7 +17,7 @@ class AccountModelTest(TestCase):
         invalid_phone_number = '12345678901'
         with self.assertRaises(ValidationError) as cm:
             validate_phone_number(invalid_phone_number)
-        self.assertEqual(cm.exception.message, 'شماره تماس وارد شده نا معتبر است.')
+        self.assertEqual(cm.exception.message, 'phone number is not valid')
         def test_str_representation(self):
             # Test that the account's email is returned as a string representation
             self.assertEqual(str(self.account), 'test@example.com')

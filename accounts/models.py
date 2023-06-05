@@ -7,16 +7,16 @@ from django.core.exceptions import ValidationError
 
 def validate_phone_number(value):
     if not value.isdigit() or len(value) != 11 or not value.startswith('09'):
-        raise ValidationError('شماره تماس وارد شده نا معتبر است.')
+        raise ValidationError('phone number is not valid')
         
 class Account(AbstractBaseUser):
-    email = models.EmailField(unique=True, verbose_name=' ایمیل')
-    username = models.CharField(max_length=30, unique=True, verbose_name='نام کاربری')
-    first_name = models.CharField(max_length=30, blank=True,  verbose_name= 'نام')
-    last_name = models.CharField(max_length=30, blank=True, verbose_name= 'نام خانوادگی')
+    email = models.EmailField(unique=True, )
+    username = models.CharField(max_length=30, unique=True, )
+    first_name = models.CharField(max_length=30, blank=True,  )
+    last_name = models.CharField(max_length=30, blank=True, )
     phone_number = models.CharField(max_length=11, validators=[validate_phone_number]\
-    , unique=True, blank=True, null=True, verbose_name= '=شماره تماس')   
-    description =  models.TextField(blank=True, null=True,  verbose_name= 'توضیحات')
+    , unique=True, blank=True, null=True, )   
+    description =  models.TextField(blank=True, null=True, )
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
