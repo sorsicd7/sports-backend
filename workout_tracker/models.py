@@ -1,7 +1,5 @@
 from django.db import models
-
-# Create your models here.
-
+from django.conf import settings
 from django.db import models
 
 class Exercise(models.Model):
@@ -20,3 +18,11 @@ class Workout(models.Model):
 
     def __str__(self):
         return self.name
+
+class AccountWorkout(models.Model):
+    account = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('account', 'workout')
