@@ -1,5 +1,8 @@
 from django.test import TestCase
-from workout_tracker.models import Exercise, Workout
+from workout_tracker.models import Exercise, Workout, AccountWorkout
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class ExerciseModelTest(TestCase):
     @classmethod
@@ -92,3 +95,28 @@ class WorkoutModelTest(TestCase):
         exercise = Exercise.objects.get(id =self.exercise.id)
         through = workout.exercises.through
         self.assertTrue(through.objects.filter(workout=workout, exercise=exercise).exists())
+
+
+class AccountWorkoutTestCase(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create(username='user1', email='test@gmail.com')
+        self.user2 = User.objects.create(username='user2',email='test2@gmail.com')
+        self.workout1 = Workout.objects.create(name='Workout 1')
+        self.workout2 = Workout.objects.create(name='Workout 2')
+        self.account_workout1 = AccountWorkout.objects.create(account=self.user1, workout=self.workout1)
+        self.account_workout2 = AccountWorkout.objects.create(account=self.user1, workout=self.workout2)
+
+    def test_account_workout_creation(self):
+        account_workout = AccountWorkout.objects.create(account=self.user2, workout=self.workout1)
+        self.assertEqual(account_workout.account, self.user2)
+        self.assertEqual(account_workout.workout, self.workout1)
+
+    def test_account_workout_uniqueness(self):
+        with self.assertRaises(Exception):
+            AccountWorkout.objects.create(account=self.user1, workout=self.workout1)
+
+    def test_account_workout_deletion(self):
+        account_workout_id = self.account_workout1.id
+        self.account_workout1.delete()
+        with self.assertRaises(AccountWorkout.DoesNotExist):
+            AccountWorkout.objects.get(id=account_workout_id)
